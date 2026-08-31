@@ -5,7 +5,7 @@ import {
   initializeGoogleDrive,
   uploadFile,
 } from "@/lib/google-drive";
-import { resend } from "@/lib/resend";
+import { getResend } from "@/lib/resend";
 import { sendTelegramMessage } from "@/lib/telegram";
 
 // eslint-disable-next-line no-restricted-imports
@@ -237,7 +237,7 @@ EasyInvoicePDF.com`,
       }),
 
       // Send email with PDF attachment
-      resend.emails.send({
+      getResend().emails.send({
         from: "Vlad from EasyInvoicePDF.com <vlad@updates.easyinvoicepdf.com>",
         to: env.INVOICE_EMAIL_RECIPIENT,
         subject: `📝 Invoices for ${monthAndYear}`,
