@@ -26,10 +26,11 @@ import { GitHubStarCTA } from "@/components/github-star-cta";
 import { ProjectLogoDescription } from "@/components/project-logo-description";
 import { GITHUB_URL, VIDEO_DEMO_URL } from "@/config";
 import { isLocalStorageAvailable } from "@/lib/check-local-storage";
+import { saveInvoice } from "@/lib/saved-invoices";
 import { umamiTrackEvent } from "@/lib/umami-analytics-track-event";
 import { cn } from "@/lib/utils";
 import * as Sentry from "@sentry/nextjs";
-import { AlertCircleIcon } from "lucide-react";
+import { AlertCircleIcon, FolderOpen, Save } from "lucide-react";
 import {
   compressToEncodedURIComponent,
   decompressFromEncodedURIComponent,
@@ -327,6 +328,41 @@ export function AppPageClient() {
     setInvoiceDataState(updatedData);
   };
 
+  const handleSaveInvoice = ({ forceNew }: { forceNew: boolean }) => {
+    if (!invoiceDataState) {
+      return;
+    }
+
+    const result = saveInvoice(invoiceSchema.parse(invoiceDataState), {
+      forceNew,
+    });
+
+    if (result.status === "error") {
+      toast.error(result.message ?? "Failed to save the invoice");
+
+      return;
+    }
+
+    const version = result.invoice
+      ? result.invoice.versions[result.invoice.versions.length - 1].version
+      : 1;
+
+    toast.success(
+      result.status === "created"
+        ? "Invoice saved"
+        : `Invoice saved as version ${version}`,
+      {
+        description: "Find it any time under 'My invoices'.",
+        action: {
+          label: "View all",
+          onClick: () => router.push("/invoices"),
+        },
+      },
+    );
+
+    umamiTrackEvent(forceNew ? "save_invoice_as_new" : "save_invoice");
+  };
+
   const handleShareInvoice = async () => {
     if (!canShareInvoice) {
       toast.error("Unable to Share Invoice", {
@@ -446,6 +482,51 @@ export function AppPageClient() {
 
                 {isDesktop ? (
                   <>
+                    <Button
+                      asChild
+                      _variant="outline"
+                      className="mx-2 mb-2 w-full lg:mx-0 lg:mb-0 lg:w-auto"
+                    >
+                      <Link href="/invoices">
+                        <FolderOpen className="mr-2 h-4 w-4" />
+                        My invoices
+                      </Link>
+                    </Button>
+
+                    <CustomTooltip
+                      trigger={
+                        <Button
+                          onClick={() => handleSaveInvoice({ forceNew: false })}
+                          _variant="outline"
+                          className="mx-2 mb-2 w-full lg:mx-0 lg:mb-0 lg:w-auto"
+                        >
+                          <Save className="mr-2 h-4 w-4" />
+                          Save invoice
+                        </Button>
+                      }
+                      content={
+                        <div className="space-y-1 p-2">
+                          <p className="text-sm font-semibold text-slate-900">
+                            Save to My invoices
+                          </p>
+                          <p className="text-pretty text-xs leading-relaxed text-slate-700">
+                            Saving an invoice number that already exists adds a
+                            new version to it, keeping the previous one in its
+                            history. Use &apos;Save as new&apos; to create a
+                            separate invoice instead.
+                          </p>
+                        </div>
+                      }
+                    />
+
+                    <Button
+                      onClick={() => handleSaveInvoice({ forceNew: true })}
+                      _variant="outline"
+                      className="mx-2 mb-2 w-full lg:mx-0 lg:mb-0 lg:w-auto"
+                    >
+                      Save as new
+                    </Button>
+
                     <CustomTooltip
                       className={cn(!canShareInvoice && "bg-red-50")}
                       trigger={
