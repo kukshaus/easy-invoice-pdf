@@ -36,6 +36,8 @@ export const MOCK_INVOICE_ITEM_DATA = {
   invoiceItemNumberIsVisible: true,
   name: "Product A",
   nameFieldIsVisible: true,
+  servicePeriodStart: "2024-01-01",
+  servicePeriodEnd: "2024-01-31",
   typeOfGTU: "GTU_01",
   typeOfGTUFieldIsVisible: true,
   amount: 2,

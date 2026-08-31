@@ -59,6 +59,7 @@ export const INVOICE_KEY_COMPRESSION_MAP = {
   paymentMethodFieldIsVisible: "q",
   paymentDue: "r",
   stripePayOnlineUrl: "s",
+  stripeDueAmountOverride: "1",
   notes: "t",
   notesFieldIsVisible: "u",
   personAuthorizedToReceiveFieldIsVisible: "v",
@@ -99,6 +100,8 @@ export const INVOICE_KEY_COMPRESSION_MAP = {
   vatAmountFieldIsVisible: "Y",
   preTaxAmount: "Z",
   preTaxAmountFieldIsVisible: "0",
+  servicePeriodStart: "2",
+  servicePeriodEnd: "3",
 } as const satisfies Record<AllInvoiceKeys, string>;
 
 /**

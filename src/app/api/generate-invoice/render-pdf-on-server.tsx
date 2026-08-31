@@ -119,6 +119,8 @@ export const ENGLISH_INVOICE_REAL_DATA = {
       invoiceItemNumberIsVisible: true,
       name: "Software Development",
       nameFieldIsVisible: true,
+      servicePeriodStart: "",
+      servicePeriodEnd: "",
       typeOfGTU: "",
       typeOfGTUFieldIsVisible: false,
       amount: 1,

@@ -34,16 +34,20 @@ export function StripeItemsTable({
     (item) => typeof item.vat === "number",
   );
 
-  // Calculate service period (example: Jan 01 2025 - Jan 31 2025)
-  const servicePeriodStart = dayjs(invoiceData.dateOfService)
+  // Service period used when an item does not carry its own dates, so
+  // invoices saved before those fields existed keep rendering as before
+  // (example: Jan 01 2025 - Jan 31 2025)
+  const fallbackServicePeriodStart = dayjs(invoiceData.dateOfService)
     .startOf("month")
     .format(invoiceData.dateFormat);
 
-  const servicePeriodEnd = dayjs(invoiceData.dateOfService).format(
+  const fallbackServicePeriodEnd = dayjs(invoiceData.dateOfService).format(
     invoiceData.dateFormat,
   );
 
   const vatAmountFieldIsVisible = invoiceData.items[0].vatFieldIsVisible;
+
+  const unitFieldIsVisible = invoiceData.items[0].unitFieldIsVisible;
 
   const canShowVat = vatAmountFieldIsVisible && hasNumericVat;
 
@@ -86,8 +90,23 @@ export function StripeItemsTable({
 
         const formattedAmount = item.amount.toLocaleString("en-US", {
           style: "decimal",
-          maximumFractionDigits: 0,
+          maximumFractionDigits: 3,
         });
+
+        // Stripe's layout has no dedicated unit column, so the unit is
+        // appended to the quantity (e.g. "75.3 hours").
+        const formattedQty =
+          unitFieldIsVisible && item.unit
+            ? `${formattedAmount} ${item.unit}`
+            : formattedAmount;
+
+        const servicePeriodStart = item.servicePeriodStart
+          ? dayjs(item.servicePeriodStart).format(invoiceData.dateFormat)
+          : fallbackServicePeriodStart;
+
+        const servicePeriodEnd = item.servicePeriodEnd
+          ? dayjs(item.servicePeriodEnd).format(invoiceData.dateFormat)
+          : fallbackServicePeriodEnd;
 
         // Format VAT value
         const formattedVat =
@@ -104,7 +123,7 @@ export function StripeItemsTable({
             </View>
             <View style={styles.colQty}>
               <Text style={[styles.fontSize11, styles.textDark]}>
-                {formattedAmount}
+                {formattedQty}
               </Text>
             </View>
             <View style={styles.colUnitPrice}>
