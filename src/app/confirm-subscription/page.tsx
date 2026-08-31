@@ -1,5 +1,5 @@
 import { verifySubscriptionToken } from "@/utils/subscription-token";
-import { resend } from "@/lib/resend";
+import { getResend } from "@/lib/resend";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { headers } from "next/headers";
@@ -52,7 +52,7 @@ export default async function ConfirmSubscriptionPage({
 
   try {
     // Add contact to Resend audience
-    const { error } = await resend.contacts.create({
+    const { error } = await getResend().contacts.create({
       email,
       audienceId: env.RESEND_AUDIENCE_ID,
     });

@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { resend } from "@/lib/resend";
+import { getResend } from "@/lib/resend";
 import { generateSubscriptionToken } from "@/utils/subscription-token";
 import { checkRateLimit, ipLimiter, emailLimiter } from "@/lib/rate-limit";
 import { headers } from "next/headers";
@@ -46,7 +46,7 @@ export async function subscribeAction(formData: FormData) {
     }
 
     // Check if email already exists
-    const { data: existingContacts } = await resend.contacts.list({
+    const { data: existingContacts } = await getResend().contacts.list({
       audienceId: env.RESEND_AUDIENCE_ID,
     });
 
@@ -64,7 +64,7 @@ export async function subscribeAction(formData: FormData) {
     const confirmationUrl = `${CONFIRMATION_URL}/confirm-subscription?token=${token}`;
 
     // Send confirmation email
-    const { error: emailError } = await resend.emails.send({
+    const { error: emailError } = await getResend().emails.send({
       from: "Vlad from EasyInvoicePDF.com <vlad@updates.easyinvoicepdf.com>",
       to: validatedFields.email,
       subject: "Confirm your subscription to EasyInvoicePDF newsletter",
