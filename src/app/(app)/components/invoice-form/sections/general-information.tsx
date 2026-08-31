@@ -300,6 +300,38 @@ export const GeneralInformation = memo(function GeneralInformation({
         </div>
       )}
 
+      {/* Due amount line override - Only for Stripe template */}
+      {template === "stripe" && (
+        <div className="duration-500 animate-in fade-in slide-in-from-bottom-2">
+          <Label htmlFor={`stripeDueAmountOverride`} className="">
+            Due Amount Line (Optional)
+          </Label>
+
+          <Controller
+            name="stripeDueAmountOverride"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                id={`stripeDueAmountOverride`}
+                type="text"
+                className="mt-1"
+              />
+            )}
+          />
+          {errors.stripeDueAmountOverride ? (
+            <ErrorMessage>
+              {errors.stripeDueAmountOverride.message}
+            </ErrorMessage>
+          ) : (
+            <InputHelperMessage>
+              Replaces the line above the items table. Leave empty to keep the
+              generated one (total, &quot;due&quot; and the payment due date).
+            </InputHelperMessage>
+          )}
+        </div>
+      )}
+
       {/* Language PDF Select */}
       <div>
         <Label htmlFor={`language`} className="mb-1">

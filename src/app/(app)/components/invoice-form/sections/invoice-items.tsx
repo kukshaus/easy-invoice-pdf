@@ -12,6 +12,7 @@ import {
   type FieldArrayWithId,
   type FieldErrors,
   type UseFieldArrayAppend,
+  useWatch,
 } from "react-hook-form";
 
 import { Input } from "@/components/ui/input";
@@ -27,6 +28,7 @@ import {
   getNumberFractionalPart,
 } from "@/utils/invoice.utils";
 import { Button } from "@/components/ui/button";
+import { FIRST_DAY_OF_MONTH, LAST_DAY_OF_MONTH } from "@/app/constants";
 
 const ErrorMessage = ({ children }: { children: React.ReactNode }) => {
   return <p className="mt-1 text-xs text-red-600">{children}</p>;
@@ -51,6 +53,10 @@ export const InvoiceItems = memo(function InvoiceItems({
   language,
   append,
 }: InvoiceItemsSettingsProps) {
+  // The service period is only rendered by the Stripe template
+  const template = useWatch({ control, name: "template" });
+  const isStripeTemplate = template === "stripe";
+
   return (
     <>
       <div className="mb-3 space-y-4">
@@ -189,6 +195,51 @@ export const InvoiceItems = memo(function InvoiceItems({
                   </ErrorMessage>
                 )}
               </div>
+
+              {/* Service period - rendered under the item name in the Stripe template */}
+              {isStripeTemplate ? (
+                <div className="duration-500 animate-in fade-in slide-in-from-bottom-2">
+                  <Label
+                    htmlFor={`itemServicePeriodStart${index}`}
+                    className=""
+                  >
+                    Service Period
+                  </Label>
+
+                  <div className="mt-1 flex items-center gap-2">
+                    <Controller
+                      name={`items.${index}.servicePeriodStart`}
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          id={`itemServicePeriodStart${index}`}
+                          type="date"
+                          className=""
+                        />
+                      )}
+                    />
+                    <span className="text-sm text-gray-500">–</span>
+                    <Controller
+                      name={`items.${index}.servicePeriodEnd`}
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          id={`itemServicePeriodEnd${index}`}
+                          type="date"
+                          className=""
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <InputHelperMessage>
+                    Shown under the item name. Leave both empty to derive the
+                    period from the Date of Service.
+                  </InputHelperMessage>
+                </div>
+              ) : null}
 
               {/* Invoice Item Type of GTU */}
               <div>
@@ -731,6 +782,8 @@ export const InvoiceItems = memo(function InvoiceItems({
             invoiceItemNumberIsVisible: true,
             name: "",
             nameFieldIsVisible: true,
+            servicePeriodStart: FIRST_DAY_OF_MONTH,
+            servicePeriodEnd: LAST_DAY_OF_MONTH,
             amount: 1,
             amountFieldIsVisible: true,
             unit: "",

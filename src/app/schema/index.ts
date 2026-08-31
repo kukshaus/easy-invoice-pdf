@@ -211,6 +211,17 @@ export const invoiceItemSchema = z
       .trim(),
     nameFieldIsVisible: z.boolean().default(true),
 
+    /**
+     * Service period rendered under the item name in the Stripe template.
+     *
+     * Both dates are optional. When either is empty the template falls back to
+     * deriving the period from `dateOfService`, which is how it behaved before
+     * these fields existed, so previously saved invoices keep rendering the
+     * same way.
+     */
+    servicePeriodStart: z.string().trim().optional().default(""),
+    servicePeriodEnd: z.string().trim().optional().default(""),
+
     typeOfGTU: z
       .string()
       .max(50, "Type of GTU must not exceed 50 characters")
@@ -512,6 +523,22 @@ export const invoiceSchema = z.object({
     )
     .optional()
     .describe("Stripe template specific field. URL field for payment link"),
+
+  /**
+   * Due amount line override for Stripe template only
+   *
+   * The Stripe template renders "<total> <due> <payment due date>" above the
+   * items table. When this field holds a non-empty value it replaces that
+   * whole generated line verbatim; empty keeps the generated one.
+   */
+  stripeDueAmountOverride: z
+    .string()
+    .max(200, "Due amount line must not exceed 200 characters")
+    .trim()
+    .optional()
+    .describe(
+      "Stripe template specific field. Replaces the generated due amount line",
+    ),
 
   notes: z
     .string()

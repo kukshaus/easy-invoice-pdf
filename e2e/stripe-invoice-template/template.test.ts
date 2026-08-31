@@ -639,7 +639,8 @@ test.describe("Stripe Invoice Template", () => {
     expect(pdfData.text).toContain(
       `${START_OF_CURRENT_MONTH} – ${LAST_DAY_OF_CURRENT_MONTH}`,
     );
-    expect(pdfData.text).toContain("1€0.00€0.00");
+    // Qty renders the unit alongside the amount, e.g. "1 service"
+    expect(pdfData.text).toContain("1 service€0.00€0.00");
     expect(pdfData.text).toContain("Subtotal€0.00");
     expect(pdfData.text).toContain("Total€0.00");
     expect(pdfData.text).toContain("Amount Due€0.00");

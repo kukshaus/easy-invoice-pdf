@@ -36,10 +36,15 @@ export function StripeDueAmount({
   // Check if payOnlineUrl is provided and valid
   const hasPayOnlineUrl = invoiceData.stripePayOnlineUrl;
 
+  // A non-empty override replaces the whole generated line
+  const dueAmountLine =
+    invoiceData.stripeDueAmountOverride ||
+    `${formattedInvoiceTotal} ${t.stripe.due} ${paymentDueDate}`;
+
   return (
     <View>
       <Text style={[styles.fontSize14, styles.fontBold, styles.mb8]}>
-        {formattedInvoiceTotal} {t.stripe.due} {paymentDueDate}
+        {dueAmountLine}
       </Text>
       {hasPayOnlineUrl ? (
         <Link

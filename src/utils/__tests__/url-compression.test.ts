@@ -143,6 +143,8 @@ describe("URL Compression Utilities", () => {
             invoiceItemNumberIsVisible: true,
             name: "Test Item",
             nameFieldIsVisible: true,
+            servicePeriodStart: "2024-01-01",
+            servicePeriodEnd: "2024-01-31",
             typeOfGTU: "",
             typeOfGTUFieldIsVisible: true,
             amount: 1,
