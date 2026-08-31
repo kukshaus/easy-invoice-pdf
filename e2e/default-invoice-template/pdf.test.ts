@@ -122,7 +122,7 @@ test.describe("PDF Preview", () => {
     expect(pdfData.text).toContain("VAT no: Seller vat number");
     expect(pdfData.text).toContain("e-mail: seller@email.com");
     expect(pdfData.text).toContain("Account Number - Seller account number");
-    expect(pdfData.text).toContain("SWIFT/BIC number: Seller swift bic");
+    expect(pdfData.text).toContain("IBAN/BIC: Seller swift bic");
 
     // Check buyer details
     expect(pdfData.text).toContain("Buyer name");

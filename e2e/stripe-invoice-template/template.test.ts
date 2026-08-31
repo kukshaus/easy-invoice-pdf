@@ -620,7 +620,7 @@ test.describe("Stripe Invoice Template", () => {
 
     expect(pdfData.text).toContain(
       "Account Number: Seller account num-\nber\n" +
-        "SWIFT/BIC number: Seller swift bic\n" +
+        "IBAN/BIC: Seller swift bic\n" +
         "Bill to\n",
     );
 

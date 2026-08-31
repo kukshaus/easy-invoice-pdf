@@ -141,7 +141,7 @@ export const TRANSLATIONS = {
       vatNo: "VAT no",
       email: "e-mail",
       accountNumber: "Account Number",
-      swiftBic: "SWIFT/BIC number",
+      swiftBic: "IBAN/BIC",
     },
     buyer: {
       name: "Buyer",
