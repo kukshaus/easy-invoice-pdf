@@ -150,11 +150,11 @@ test.describe("PDF Preview", () => {
     expect(pdfData.text).toContain("Person authorized to receive");
     expect(pdfData.text).toContain("Person authorized to issue");
     expect(pdfData.text).toContain("Reverse charge");
-    expect(pdfData.text).toContain("Created with https://easyinvoicepdf.com");
+    expect(pdfData.text).not.toContain("Created with https://easyinvoicepdf.com");
 
     // Check page footer and metadata
     expect(pdfData.text).toContain(
-      `1/${CURRENT_MONTH_AND_YEAR}·€0.00 due ${PAYMENT_DATE}·Created with https://easyinvoicepdf.comPage 1 of 1`,
+      `1/${CURRENT_MONTH_AND_YEAR}·€0.00 due ${PAYMENT_DATE}Page 1 of 1`,
     );
   });
 
@@ -218,7 +218,7 @@ Pozostało do zapłaty: 0.00 EUR
 Kwota słownie: zero EUR 00/100`);
 
     expect(pdfData.text).toContain(
-      `1/${CURRENT_MONTH_AND_YEAR}·0,00 € do zapłaty do ${PAYMENT_DATE}·Utworzono za pomocą https://easyinvoicepdf.comStrona 1 z 1`,
+      `1/${CURRENT_MONTH_AND_YEAR}·0,00 € do zapłaty do ${PAYMENT_DATE}Strona 1 z 1`,
     );
   });
 
@@ -414,7 +414,7 @@ Kwota słownie: zero EUR 00/100`);
     expect(pdfData.text).toContain("Reverse charge");
 
     expect(pdfData.text).toContain(
-      `1/${CURRENT_MONTH_AND_YEAR}·£3,000.00 due ${paymentDate}·Created with https://easyinvoicepdf.comPage 1 of 1`,
+      `1/${CURRENT_MONTH_AND_YEAR}·£3,000.00 due ${paymentDate}Page 1 of 1`,
     );
   });
 
