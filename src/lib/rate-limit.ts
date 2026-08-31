@@ -10,6 +10,16 @@ export const ipLimiter = new Ratelimit({
   prefix: "ratelimit:ip",
 });
 
+// Saving is a normal, repeated action, so this only exists to stop an
+// anonymous client from filling Redis
+export const saveInvoiceLimiter = new Ratelimit({
+  redis,
+  // 120 writes per hour
+  limiter: Ratelimit.slidingWindow(120, "1 h"),
+  analytics: true,
+  prefix: "ratelimit:save-invoice",
+});
+
 export const emailLimiter = new Ratelimit({
   redis,
   // 5 emails per hour

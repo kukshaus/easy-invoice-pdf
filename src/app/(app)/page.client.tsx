@@ -26,7 +26,7 @@ import { GitHubStarCTA } from "@/components/github-star-cta";
 import { ProjectLogoDescription } from "@/components/project-logo-description";
 import { GITHUB_URL, VIDEO_DEMO_URL } from "@/config";
 import { isLocalStorageAvailable } from "@/lib/check-local-storage";
-import { saveInvoice } from "@/lib/saved-invoices";
+import { saveInvoiceAction } from "@/actions/saved-invoices-action";
 import { umamiTrackEvent } from "@/lib/umami-analytics-track-event";
 import { cn } from "@/lib/utils";
 import * as Sentry from "@sentry/nextjs";
@@ -85,6 +85,8 @@ export function AppPageClient() {
     useState(false);
 
   const [canShareInvoice, setCanShareInvoice] = useState(true);
+
+  const [isSavingInvoice, setIsSavingInvoice] = useState(false);
 
   // Helper function to load from localStorage
   const loadFromLocalStorage = useCallback(() => {
@@ -328,39 +330,48 @@ export function AppPageClient() {
     setInvoiceDataState(updatedData);
   };
 
-  const handleSaveInvoice = ({ forceNew }: { forceNew: boolean }) => {
-    if (!invoiceDataState) {
+  const handleSaveInvoice = async ({ forceNew }: { forceNew: boolean }) => {
+    if (!invoiceDataState || isSavingInvoice) {
       return;
     }
 
-    const result = saveInvoice(invoiceSchema.parse(invoiceDataState), {
-      forceNew,
-    });
+    setIsSavingInvoice(true);
 
-    if (result.status === "error") {
-      toast.error(result.message ?? "Failed to save the invoice");
+    try {
+      const result = await saveInvoiceAction(
+        invoiceSchema.parse(invoiceDataState),
+        { forceNew },
+      );
 
-      return;
-    }
+      if (!result.ok || !result.data) {
+        toast.error(result.error ?? "Failed to save the invoice");
 
-    const version = result.invoice
-      ? result.invoice.versions[result.invoice.versions.length - 1].version
-      : 1;
+        return;
+      }
 
-    toast.success(
-      result.status === "created"
-        ? "Invoice saved"
-        : `Invoice saved as version ${version}`,
-      {
-        description: "Find it any time under 'My invoices'.",
-        action: {
-          label: "View all",
-          onClick: () => router.push("/invoices"),
+      toast.success(
+        result.data.created
+          ? "Invoice saved"
+          : `Invoice saved as version ${result.data.version}`,
+        {
+          description:
+            "Stored on your account key. Find it under 'My invoices'.",
+          action: {
+            label: "View all",
+            onClick: () => router.push("/invoices"),
+          },
         },
-      },
-    );
+      );
 
-    umamiTrackEvent(forceNew ? "save_invoice_as_new" : "save_invoice");
+      umamiTrackEvent(forceNew ? "save_invoice_as_new" : "save_invoice");
+    } catch (error) {
+      console.error("Failed to save invoice:", error);
+      toast.error("Failed to save the invoice");
+
+      Sentry.captureException(error);
+    } finally {
+      setIsSavingInvoice(false);
+    }
   };
 
   const handleShareInvoice = async () => {
@@ -496,12 +507,15 @@ export function AppPageClient() {
                     <CustomTooltip
                       trigger={
                         <Button
-                          onClick={() => handleSaveInvoice({ forceNew: false })}
+                          onClick={() =>
+                            void handleSaveInvoice({ forceNew: false })
+                          }
+                          disabled={isSavingInvoice}
                           _variant="outline"
                           className="mx-2 mb-2 w-full lg:mx-0 lg:mb-0 lg:w-auto"
                         >
                           <Save className="mr-2 h-4 w-4" />
-                          Save invoice
+                          {isSavingInvoice ? "Saving..." : "Save invoice"}
                         </Button>
                       }
                       content={
@@ -520,7 +534,8 @@ export function AppPageClient() {
                     />
 
                     <Button
-                      onClick={() => handleSaveInvoice({ forceNew: true })}
+                      onClick={() => void handleSaveInvoice({ forceNew: true })}
+                      disabled={isSavingInvoice}
                       _variant="outline"
                       className="mx-2 mb-2 w-full lg:mx-0 lg:mb-0 lg:w-auto"
                     >

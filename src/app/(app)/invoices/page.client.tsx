@@ -17,11 +17,17 @@ import {
 } from "@/components/ui/alert-dialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import {
-  deleteSavedInvoice,
+  deleteInvoiceAction,
+  getInvoicesAction,
+  importInvoicesAction,
+} from "@/actions/saved-invoices-action";
+import {
+  clearLegacyInvoices,
   getInvoiceNumber,
   getLatestVersion,
-  getSavedInvoices,
+  getLegacyInvoices,
 } from "@/lib/saved-invoices";
+import { AccessKeyPanel } from "./access-key-panel";
 import { umamiTrackEvent } from "@/lib/umami-analytics-track-event";
 import { cn } from "@/lib/utils";
 import * as Sentry from "@sentry/nextjs";
@@ -46,6 +52,10 @@ dayjs.extend(relativeTime);
 
 export function InvoicesPageClient() {
   const [invoices, setInvoices] = useState<SavedInvoice[] | null>(null);
+  const [accessKey, setAccessKey] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [legacyInvoices, setLegacyInvoices] = useState<SavedInvoice[]>([]);
+  const [isImporting, setIsImporting] = useState(false);
   const [query, setQuery] = useState("");
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [invoiceToDelete, setInvoiceToDelete] = useState<SavedInvoice | null>(
@@ -53,8 +63,65 @@ export function InvoicesPageClient() {
   );
 
   useEffect(() => {
-    setInvoices(getSavedInvoices());
+    const load = async () => {
+      const result = await getInvoicesAction();
+
+      if (!result.ok || !result.data) {
+        setLoadError(result.error ?? "Could not load your invoices.");
+        setInvoices([]);
+
+        return;
+      }
+
+      setAccessKey(result.data.accessKey);
+      setInvoices(result.data.invoices);
+
+      // Invoices saved before storage moved to the server are still sitting in
+      // this browser, so offer to move them across once
+      const stored = getLegacyInvoices();
+      const storedIds = new Set(result.data.invoices.map(({ id }) => id));
+
+      setLegacyInvoices(stored.filter(({ id }) => !storedIds.has(id)));
+    };
+
+    void load();
   }, []);
+
+  const handleImportLegacy = async () => {
+    if (isImporting) {
+      return;
+    }
+
+    setIsImporting(true);
+
+    try {
+      const result = await importInvoicesAction(legacyInvoices);
+
+      if (!result.ok || !result.data) {
+        toast.error(result.error ?? "Could not import your local invoices");
+
+        return;
+      }
+
+      const refreshed = await getInvoicesAction();
+
+      if (refreshed.ok && refreshed.data) {
+        setAccessKey(refreshed.data.accessKey);
+        setInvoices(refreshed.data.invoices);
+      }
+
+      clearLegacyInvoices();
+      setLegacyInvoices([]);
+
+      toast.success(
+        `Moved ${result.data.imported} invoice${
+          result.data.imported === 1 ? "" : "s"
+        } to your account key`,
+      );
+    } finally {
+      setIsImporting(false);
+    }
+  };
 
   const filtered = useMemo(() => {
     if (!invoices) {
@@ -103,19 +170,29 @@ export function InvoicesPageClient() {
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!invoiceToDelete) {
       return;
     }
 
-    deleteSavedInvoice(invoiceToDelete.id);
-    setInvoices(getSavedInvoices());
+    const result = await deleteInvoiceAction(invoiceToDelete.id);
+
     setInvoiceToDelete(null);
+
+    if (!result.ok) {
+      toast.error(result.error ?? "Failed to delete the invoice");
+
+      return;
+    }
+
+    setInvoices((current) =>
+      (current ?? []).filter((invoice) => invoice.id !== invoiceToDelete.id),
+    );
 
     toast.success("Invoice deleted");
   };
 
-  // Render nothing until localStorage has been read on the client
+  // Render nothing until the first load resolves
   if (!invoices) {
     return null;
   }
@@ -148,6 +225,38 @@ export function InvoicesPageClient() {
               </Link>
             </Button>
           </header>
+
+          {loadError ? (
+            <p className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+              {loadError}
+            </p>
+          ) : null}
+
+          {legacyInvoices.length > 0 ? (
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-blue-200 bg-blue-50 p-4">
+              <p className="text-sm text-blue-900">
+                {legacyInvoices.length} invoice
+                {legacyInvoices.length === 1 ? "" : "s"} saved in this browser
+                before invoices moved to server storage.
+              </p>
+              <Button
+                _size="sm"
+                onClick={() => void handleImportLegacy()}
+                disabled={isImporting}
+              >
+                {isImporting ? "Moving..." : "Move them to my account key"}
+              </Button>
+            </div>
+          ) : null}
+
+          <AccessKeyPanel
+            accessKey={accessKey}
+            onAdopted={(adopted, key) => {
+              setInvoices(adopted);
+              setAccessKey(key);
+              setLoadError(null);
+            }}
+          />
 
           {invoices.length > 0 ? (
             <div className="relative mb-4 max-w-sm">
@@ -211,8 +320,9 @@ export function InvoicesPageClient() {
           )}
 
           <p className="mt-4 text-xs text-slate-500">
-            Invoices are stored in this browser only. Clearing site data removes
-            them, and they are not synced across devices.
+            Invoices are stored on the server against your access key, so they
+            survive clearing this browser. Keep the key safe: it is the only way
+            back to them.
           </p>
         </div>
       </div>
@@ -237,7 +347,7 @@ export function InvoicesPageClient() {
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              onClick={handleDelete}
+              onClick={() => void handleDelete()}
               className="bg-red-600 hover:bg-red-700"
             >
               Delete
