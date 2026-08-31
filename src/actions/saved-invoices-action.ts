@@ -12,13 +12,14 @@ import {
   readAccessKey,
   writeAccessKey,
 } from "@/lib/invoice-access-key";
+import { checkInMemoryRateLimit } from "@/lib/in-memory-rate-limit";
 import {
   InvoiceTooLargeError,
   listStoredInvoices,
   putStoredInvoice,
   removeStoredInvoice,
+  TooManyInvoicesError,
 } from "@/lib/invoice-store";
-import { checkRateLimit, saveInvoiceLimiter } from "@/lib/rate-limit";
 import * as Sentry from "@sentry/nextjs";
 import { headers } from "next/headers";
 
@@ -29,10 +30,13 @@ interface ActionResult<T> {
 }
 
 const STORAGE_UNAVAILABLE =
-  "Invoice storage is not configured on the server. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN.";
+  "Could not reach invoice storage on the server. Check that the data directory is writable.";
 
 function toErrorResult(error: unknown): ActionResult<never> {
-  if (error instanceof InvoiceTooLargeError) {
+  if (
+    error instanceof InvoiceTooLargeError ||
+    error instanceof TooManyInvoicesError
+  ) {
     return { ok: false, error: error.message };
   }
 
@@ -46,6 +50,16 @@ function clientIp() {
   const forwardedFor = headers().get("x-forwarded-for");
 
   return forwardedFor?.split(",")[0]?.trim() || "127.0.0.1";
+}
+
+// Saving is a normal repeated action, so this only exists to stop one client
+// hammering the disk
+function checkWriteRateLimit() {
+  return checkInMemoryRateLimit({
+    identifier: clientIp(),
+    limit: 120,
+    windowMs: 60 * 60 * 1000,
+  });
 }
 
 function latestVersionNumber(invoice: SavedInvoice) {
@@ -88,13 +102,8 @@ export async function saveInvoiceAction(
     return { ok: false, error: "This invoice could not be validated." };
   }
 
-  const rateLimit = await checkRateLimit(clientIp(), saveInvoiceLimiter);
-
-  if (!rateLimit.success) {
-    return {
-      ok: false,
-      error: rateLimit.error ?? "Too many saves. Please try again later.",
-    };
+  if (!checkWriteRateLimit().success) {
+    return { ok: false, error: "Too many saves. Please try again later." };
   }
 
   // Mint a key on first save so that merely opening the app stores nothing
@@ -176,7 +185,7 @@ export async function deleteInvoiceAction(
 
 /**
  * Adopts an access key from another device. The format is validated before it
- * is used, since it becomes part of the Redis key.
+ * is used, since it becomes a filename on the server.
  */
 export async function loadAccessKeyAction(
   key: string,
@@ -208,13 +217,8 @@ export async function importInvoicesAction(
     return { ok: false, error: "Those invoices could not be read." };
   }
 
-  const rateLimit = await checkRateLimit(clientIp(), saveInvoiceLimiter);
-
-  if (!rateLimit.success) {
-    return {
-      ok: false,
-      error: rateLimit.error ?? "Too many saves. Please try again later.",
-    };
+  if (!checkWriteRateLimit().success) {
+    return { ok: false, error: "Too many saves. Please try again later." };
   }
 
   let accessKey = readAccessKey();
