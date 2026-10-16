@@ -222,9 +222,9 @@ export function InvoicePDFDownloadLink({
         download={url ? filename : undefined}
         onClick={handleDownloadPDFClick}
         className={cn(
-          "h-[36px] w-full rounded-lg bg-slate-900 px-4 py-2 text-center text-sm font-medium text-slate-50",
-          "shadow-sm shadow-black/5 outline-offset-2 hover:bg-slate-900/90 active:scale-[98%] active:transition-transform",
-          "focus-visible:border-indigo-500 focus-visible:ring focus-visible:ring-indigo-200 focus-visible:ring-opacity-50",
+          "h-[36px] w-full rounded-lg bg-brand px-4 py-2 text-center text-sm font-medium text-white",
+          "outline-offset-2 hover:bg-brand-600 active:scale-[98%] active:transition-transform",
+          "focus-visible:border-brand focus-visible:ring focus-visible:ring-brand-200 focus-visible:ring-opacity-50",
           "dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 lg:mb-0 lg:w-[210px]",
           {
             "pointer-events-none opacity-70": isLoading,

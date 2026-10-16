@@ -456,9 +456,9 @@ export function AppPageClient() {
         <DevLocalStorageView />
       )}
 
-      <div className="flex flex-col items-center justify-start bg-gray-100 pb-4 sm:p-4 md:justify-center lg:min-h-screen">
-        <div className="w-full max-w-7xl bg-white p-3 shadow-lg sm:mb-0 sm:rounded-lg sm:p-6 2xl:max-w-[1680px]">
-          <div data-testid="header">
+      <div className="flex min-h-screen flex-col items-center justify-start bg-white pb-4">
+        <div className="w-full max-w-7xl p-3 sm:p-6 2xl:max-w-[1680px]">
+          <div data-testid="header" className="mb-6 border-b border-line pb-4">
             <div className="flex w-full flex-row flex-wrap items-center justify-between lg:flex-nowrap">
               <div className="relative bottom-2 mt-2 flex w-full flex-col justify-center sm:bottom-4 sm:mt-0">
                 <div className="flex items-center">
@@ -472,7 +472,7 @@ export function AppPageClient() {
               <div className="mb-1 flex w-full flex-wrap justify-center gap-3 lg:flex-nowrap lg:justify-end">
                 <Button
                   asChild
-                  className="mx-2 w-full bg-blue-500 text-white transition-all hover:no-underline hover:opacity-90 lg:mx-0 lg:w-auto"
+                  className="mx-2 w-full bg-brand text-white transition-all hover:bg-brand-600 hover:no-underline lg:mx-0 lg:w-auto"
                   _variant="link"
                   onClick={() => {
                     // analytics track event
@@ -706,14 +706,14 @@ function ProjectInfo() {
       <span className="relative bottom-0 text-center text-sm text-gray-900 lg:bottom-3">
         <button
           onClick={handleWatchDemoClick}
-          className="inline-flex items-center gap-1.5 transition-colors hover:text-blue-600 hover:underline"
+          className="inline-flex items-center gap-1.5 transition-colors hover:text-brand hover:underline"
         >
           <span>How it works</span>
         </button>
         {" | "}
         <a
           href="https://dub.sh/easy-invoice-pdf-feedback"
-          className="transition-colors hover:text-blue-600 hover:underline"
+          className="transition-colors hover:text-brand hover:underline"
           target="_blank"
         >
           Share your feedback

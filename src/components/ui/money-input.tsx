@@ -58,7 +58,7 @@ const MoneyInput = React.memo(
             )}
             placeholder="0.00"
           />
-          <span className="inline-flex items-center rounded-e-lg border border-gray-300 bg-background px-3 text-sm text-slate-950 shadow-sm shadow-black/5 transition-shadow">
+          <span className="inline-flex items-center rounded-e-lg border border-line bg-background px-3 text-sm text-slate-950 transition-shadow">
             {shownCurrencyText}
           </span>
         </div>
@@ -94,9 +94,9 @@ const ReadOnlyMoneyInput = React.memo(
             {...props}
             ref={ref}
             className={cn(
-              "-me-px block w-full cursor-not-allowed rounded-md rounded-e-none border border-gray-300 bg-gray-100 px-3 py-2 ps-6",
+              "-me-px block w-full cursor-not-allowed rounded-md rounded-e-none border border-line bg-surface px-3 py-2 ps-6",
               getCurrencyPadding(currencySymbol),
-              "focus-visible:border-indigo-500 focus-visible:ring focus-visible:ring-indigo-200 focus-visible:ring-opacity-50",
+              "focus-visible:border-brand focus-visible:ring focus-visible:ring-brand-200 focus-visible:ring-opacity-50",
               props.className,
             )}
             placeholder="0.00"
@@ -104,7 +104,7 @@ const ReadOnlyMoneyInput = React.memo(
             readOnly
             title="This field is read-only"
           />
-          <span className="inline-flex cursor-default items-center rounded-e-lg border border-gray-300 bg-gray-100 px-3 text-sm text-slate-950 shadow-sm shadow-black/5 transition-shadow">
+          <span className="inline-flex cursor-default items-center rounded-e-lg border border-line bg-surface px-3 text-sm text-slate-950 transition-shadow">
             {shownCurrencyText}
           </span>
         </div>

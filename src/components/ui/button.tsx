@@ -5,21 +5,17 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-colors outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:shrink-0 [&[data-disabled=true]]:opacity-50 active:scale-[98%] active:transition-transform",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:shrink-0 [&[data-disabled=true]]:opacity-50 active:scale-[98%] active:transition-transform",
   {
     variants: {
       _variant: {
-        default:
-          "bg-slate-900 text-slate-50 shadow-sm shadow-black/5 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90",
-        destructive:
-          "bg-red-500 text-slate-50 shadow-sm shadow-black/5 hover:bg-red-500/90 dark:bg-red-900 dark:text-slate-50 dark:hover:bg-red-900/90",
+        default: "bg-brand text-white hover:bg-brand-600",
+        destructive: "bg-[#9C1224] text-white hover:bg-[#7E0E1D]",
         outline:
-          "border border-gray-200 bg-white shadow shadow-black/5 hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50",
-        secondary:
-          "bg-slate-100 text-slate-900 shadow-sm shadow-black/5 hover:bg-slate-100/80 dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-slate-800/80",
-        ghost:
-          "hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50",
-        link: "text-slate-900 underline-offset-4 hover:underline dark:text-slate-50",
+          "border border-line bg-white text-ink hover:border-brand hover:bg-surface",
+        secondary: "bg-surface text-ink hover:bg-surface-strong",
+        ghost: "text-ink hover:bg-surface",
+        link: "text-brand underline-offset-4 hover:underline",
       },
       _size: {
         default: "h-9 px-4 py-2",

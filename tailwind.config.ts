@@ -10,9 +10,41 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: [
+          "var(--font-inter)",
+          "Inter",
+          "Arial",
+          "Helvetica",
+          "sans-serif",
+        ],
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        // szamlazz.hu-inspired palette (blue accent instead of orange)
+        ink: {
+          DEFAULT: "#102126",
+          muted: "#293D42",
+          soft: "#5B6E74",
+        },
+        brand: {
+          DEFAULT: "#066FC3",
+          50: "#EAF4FC",
+          100: "#D3E7F8",
+          200: "#BFDDF5",
+          300: "#69B2EB",
+          600: "#055392",
+          700: "#044374",
+        },
+        surface: {
+          DEFAULT: "#F3F5F6",
+          strong: "#E7ECEE",
+        },
+        line: {
+          DEFAULT: "#CDD7DB",
+          soft: "#E7ECEE",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

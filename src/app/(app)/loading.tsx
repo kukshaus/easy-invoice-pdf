@@ -1,7 +1,7 @@
 export default function Loading() {
   return (
-    <div className="flex flex-col items-center justify-start bg-gray-100 sm:p-4 md:justify-center lg:min-h-screen">
-      <div className="w-full max-w-7xl bg-white p-3 shadow-lg sm:mb-0 sm:rounded-lg sm:p-6 2xl:max-w-[1680px]">
+    <div className="flex min-h-screen flex-col items-center justify-start bg-white">
+      <div className="w-full max-w-7xl p-3 sm:p-6 2xl:max-w-[1680px]">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
           {/* Left side - Form */}
           <div className="col-span-8 w-full space-y-6 lg:col-span-4">
@@ -25,7 +25,7 @@ export default function Loading() {
                 <div className="h-6 w-full animate-pulse rounded bg-gray-400 lg:w-48" />
                 <div className="hidden gap-2 lg:flex">
                   <div className="h-8 w-32 animate-pulse rounded bg-gray-400" />
-                  <div className="h-8 w-32 animate-pulse rounded bg-blue-400" />
+                  <div className="h-8 w-32 animate-pulse rounded bg-brand-200" />
                 </div>
               </div>
             </div>

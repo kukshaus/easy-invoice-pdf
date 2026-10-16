@@ -24,7 +24,7 @@ export function Footer({
   };
 }) {
   return (
-    <footer className="w-full border-t border-slate-200 bg-white py-12 md:py-16">
+    <footer className="w-full border-t border-line bg-white py-12 md:py-16">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col gap-10 md:flex-row">
           <div className="space-y-4 md:w-1/3">

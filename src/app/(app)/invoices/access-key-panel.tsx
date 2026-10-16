@@ -74,7 +74,7 @@ export function AccessKeyPanel({
   };
 
   return (
-    <div className="mb-6 rounded-lg border border-slate-200 bg-slate-50/60 p-4">
+    <div className="mb-6 rounded-xl border border-line bg-surface p-4">
       <div className="flex items-start gap-3">
         <KeyRound className="mt-0.5 h-4 w-4 flex-shrink-0 text-slate-400" />
 
@@ -83,7 +83,7 @@ export function AccessKeyPanel({
             <div>
               <Label className="text-slate-900">Your access key</Label>
               <div className="mt-1 flex flex-wrap items-center gap-2">
-                <code className="rounded border border-slate-200 bg-white px-2 py-1 font-mono text-sm text-slate-800">
+                <code className="rounded-md border border-line bg-white px-2 py-1 font-mono text-sm text-ink">
                   {accessKey}
                 </code>
                 <Button _variant="outline" _size="sm" onClick={handleCopy}>

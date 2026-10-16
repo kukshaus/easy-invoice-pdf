@@ -199,15 +199,13 @@ export function InvoicesPageClient() {
 
   return (
     <TooltipProvider delayDuration={0}>
-      <div className="min-h-screen bg-gray-100 pb-10 sm:p-4">
-        <div className="mx-auto w-full max-w-7xl bg-white p-4 shadow-lg sm:rounded-lg sm:p-6 2xl:max-w-[1680px]">
-          <header className="mb-6 flex flex-wrap items-center justify-between gap-4">
+      <div className="min-h-screen bg-white pb-10">
+        <div className="mx-auto w-full max-w-7xl p-4 sm:p-6 2xl:max-w-[1680px]">
+          <header className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-line pb-4">
             <div className="flex items-center gap-3">
               <ProjectLogo className="h-8 w-8" />
               <div>
-                <h1 className="text-xl font-semibold text-slate-900">
-                  My invoices
-                </h1>
+                <h1 className="text-xl font-semibold text-ink">My invoices</h1>
                 <p className="text-sm text-slate-500">
                   {invoices.length === 0
                     ? "No saved invoices yet"
@@ -233,8 +231,8 @@ export function InvoicesPageClient() {
           ) : null}
 
           {legacyInvoices.length > 0 ? (
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-blue-200 bg-blue-50 p-4">
-              <p className="text-sm text-blue-900">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-brand-200 bg-brand-50 p-4">
+              <p className="text-sm text-brand-700">
                 {legacyInvoices.length} invoice
                 {legacyInvoices.length === 1 ? "" : "s"} saved in this browser
                 before invoices moved to server storage.
@@ -274,49 +272,55 @@ export function InvoicesPageClient() {
           {invoices.length === 0 ? (
             <EmptyState />
           ) : filtered.length === 0 ? (
-            <p className="rounded-lg border border-dashed border-slate-200 p-10 text-center text-sm text-slate-500">
+            <p className="rounded-xl border border-dashed border-line p-10 text-center text-sm text-slate-500">
               No invoices match &quot;{query}&quot;.
             </p>
           ) : (
-            <div className="overflow-hidden rounded-lg border border-slate-200">
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[860px] border-collapse text-left text-sm">
-                  <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
-                    <tr>
-                      <th className="w-8 px-3 py-3" />
-                      <th className="px-3 py-3 font-medium">Invoice</th>
-                      <th className="px-3 py-3 font-medium">Buyer</th>
-                      <th className="px-3 py-3 font-medium">Issued</th>
-                      <th className="px-3 py-3 font-medium">Due</th>
-                      <th className="px-3 py-3 text-right font-medium">
-                        Total
-                      </th>
-                      <th className="px-3 py-3 font-medium">Version</th>
-                      <th className="px-3 py-3 font-medium">Updated</th>
-                      <th className="px-3 py-3 text-right font-medium">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {filtered.map((invoice) => (
-                      <InvoiceRow
-                        key={invoice.id}
-                        invoice={invoice}
-                        isExpanded={expandedId === invoice.id}
-                        onToggle={() =>
-                          setExpandedId(
-                            expandedId === invoice.id ? null : invoice.id,
-                          )
-                        }
-                        onOpen={openInEditor}
-                        onDelete={() => setInvoiceToDelete(invoice)}
-                      />
-                    ))}
-                  </tbody>
-                </table>
+            <section className="rounded-xl border border-line bg-surface p-3 sm:p-4">
+              <h2 className="mb-3 text-lg font-semibold text-ink">
+                Saved invoices{" "}
+                <span className="font-normal">({filtered.length})</span>
+              </h2>
+              <div className="overflow-hidden rounded-xl border border-line bg-white">
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[860px] border-collapse text-left text-sm">
+                    <thead className="bg-surface text-xs uppercase tracking-wide text-slate-500">
+                      <tr>
+                        <th className="w-8 px-3 py-3" />
+                        <th className="px-3 py-3 font-medium">Invoice</th>
+                        <th className="px-3 py-3 font-medium">Buyer</th>
+                        <th className="px-3 py-3 font-medium">Issued</th>
+                        <th className="px-3 py-3 font-medium">Due</th>
+                        <th className="px-3 py-3 text-right font-medium">
+                          Total
+                        </th>
+                        <th className="px-3 py-3 font-medium">Version</th>
+                        <th className="px-3 py-3 font-medium">Updated</th>
+                        <th className="px-3 py-3 text-right font-medium">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {filtered.map((invoice) => (
+                        <InvoiceRow
+                          key={invoice.id}
+                          invoice={invoice}
+                          isExpanded={expandedId === invoice.id}
+                          onToggle={() =>
+                            setExpandedId(
+                              expandedId === invoice.id ? null : invoice.id,
+                            )
+                          }
+                          onOpen={openInEditor}
+                          onDelete={() => setInvoiceToDelete(invoice)}
+                        />
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
+            </section>
           )}
 
           <p className="mt-4 text-xs text-slate-500">
@@ -385,7 +389,7 @@ function InvoiceRow({
 
   return (
     <>
-      <tr className="group transition-colors hover:bg-slate-50">
+      <tr className="group transition-colors hover:bg-surface">
         <td className="px-3 py-3 align-middle">
           {hasHistory ? (
             <button
@@ -461,7 +465,7 @@ function InvoiceRow({
 
       {isExpanded
         ? [...invoice.versions].reverse().map((version, index) => (
-            <tr key={version.version} className="bg-slate-50/60 text-xs">
+            <tr key={version.version} className="bg-surface/60 text-xs">
               <td />
               <td className="py-2 pl-9 pr-3 text-slate-600" colSpan={5}>
                 <span className="flex items-center gap-2">
@@ -501,7 +505,7 @@ function InvoiceRow({
 
 function EmptyState() {
   return (
-    <div className="rounded-lg border border-dashed border-slate-200 p-12 text-center">
+    <div className="rounded-xl border border-dashed border-line p-12 text-center">
       <FileText className="mx-auto h-10 w-10 text-slate-300" />
       <h2 className="mt-4 text-base font-medium text-slate-900">
         No saved invoices yet

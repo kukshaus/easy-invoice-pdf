@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
 import Script from "next/script";
 
 import { type WebSite, type WithContext } from "schema-dts";
@@ -13,6 +14,12 @@ import { Toaster } from "sonner";
 import { STATIC_ASSETS_URL } from "@/config";
 
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
@@ -111,10 +118,10 @@ export default async function RootLayout({
   } = await checkDeviceUserAgent();
 
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
       {/* Performance monitoring only in development */}
       {/* {process.env.NODE_ENV !== "development" ? null : <ReactScan />} */}
-      <body>
+      <body className="font-sans text-ink antialiased">
         <DeviceContextProvider
           isDesktop={isDesktopServer}
           isAndroid={isAndroid}

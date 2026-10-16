@@ -217,7 +217,7 @@ export const MultiSelect = React.forwardRef<
                     }
                   }}
                   className={cn(
-                    "min-h- mb-4 h-auto rounded-l-lg rounded-r-none border-r-0 bg-slate-900 px-4 py-2 text-center text-sm font-medium text-slate-50 shadow-sm shadow-black/5 outline-offset-2 hover:bg-slate-900/90 focus-visible:border-indigo-500 focus-visible:ring focus-visible:ring-indigo-200 focus-visible:ring-opacity-50 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 lg:mb-0",
+                    "min-h- mb-4 h-auto rounded-l-lg rounded-r-none border-r-0 bg-brand px-4 py-2 text-center text-sm font-medium text-white outline-offset-2 hover:bg-brand-600 focus-visible:border-brand focus-visible:ring focus-visible:ring-brand-200 focus-visible:ring-opacity-50 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 lg:mb-0",
                     selectedLanguages.length === 0 && "lg:w-[120px]",
                     selectedLanguages.length === 1 && "lg:w-[200px]",
                     selectedLanguages.length === 2 && "lg:w-[240px]",
@@ -276,7 +276,7 @@ export const MultiSelect = React.forwardRef<
                 <Button
                   onClick={handleTogglePopover}
                   className={cn(
-                    "mb-4 h-auto rounded-l-none rounded-r-lg border-l-0 bg-slate-900 px-2 py-2 text-center text-sm font-medium text-slate-50 shadow-sm shadow-black/5 outline-offset-2 hover:bg-slate-900/90 focus-visible:border-indigo-500 focus-visible:ring focus-visible:ring-indigo-200 focus-visible:ring-opacity-50 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 lg:mb-0",
+                    "mb-4 h-auto rounded-l-none rounded-r-lg border-l-0 bg-brand px-2 py-2 text-center text-sm font-medium text-white outline-offset-2 hover:bg-brand-600 focus-visible:border-brand focus-visible:ring focus-visible:ring-brand-200 focus-visible:ring-opacity-50 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 lg:mb-0",
                   )}
                 >
                   <ChevronDown className="text-muted-foreground h-4 w-4" />
@@ -348,7 +348,7 @@ export const MultiSelect = React.forwardRef<
                           setIsPopoverOpen(false);
                           if (handleDownload) await handleDownload();
                         }}
-                        className="max-w-full flex-1 cursor-pointer justify-center bg-slate-900 text-slate-50 data-[selected='true']:bg-slate-900/90 data-[selected='true']:text-white dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90"
+                        className="max-w-full flex-1 cursor-pointer justify-center bg-brand text-white data-[selected='true']:bg-brand-600 data-[selected='true']:text-white dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90"
                       >
                         Download
                       </CommandItem>
