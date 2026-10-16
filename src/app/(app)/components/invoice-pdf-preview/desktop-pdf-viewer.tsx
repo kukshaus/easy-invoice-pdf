@@ -11,7 +11,7 @@ export function DesktopInvoicePDFViewer({
 }) {
   if (errorWhileGeneratingPdfIsShown) {
     return (
-      <div className="flex h-[580px] w-full items-center justify-center border border-gray-200 bg-gray-200 lg:h-[620px] 2xl:h-[700px]">
+      <div className="flex h-full min-h-[560px] w-full items-center justify-center rounded-xl border border-line bg-surface">
         <div className="text-center">
           <p className="text-red-600">Error generating PDF preview</p>
           <p className="mt-2 text-sm text-gray-600">

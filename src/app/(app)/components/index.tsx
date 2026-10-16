@@ -11,9 +11,9 @@ import { StripeInvoicePdfTemplate } from "./invoice-pdf-stripe-template";
 import { cn } from "@/lib/utils";
 
 const DesktopPDFViewerModuleLoading = () => (
-  <div className="flex h-[580px] w-full items-center justify-center border border-gray-200 bg-gray-200 lg:h-[620px] 2xl:h-[700px]">
+  <div className="flex h-full min-h-[560px] w-full items-center justify-center rounded-xl border border-line bg-surface">
     <div className="text-center">
-      <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+      <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-brand border-t-transparent" />
       <p className="text-gray-600">Loading PDF viewer...</p>
     </div>
   </div>
@@ -216,7 +216,7 @@ export function InvoiceClientPage({
         // Desktop View
         <>
           <div className="col-span-4">
-            <div className="h-[620px] overflow-auto border-b px-3 pl-0 2xl:h-[700px]">
+            <div className="h-[calc(100dvh-14rem)] min-h-[560px] overflow-auto border-b px-3 pl-0">
               <InvoiceForm
                 invoiceData={invoiceDataState}
                 handleInvoiceDataChange={handleInvoiceDataChange}
@@ -224,7 +224,7 @@ export function InvoiceClientPage({
               />
             </div>
           </div>
-          <div className="col-span-8 h-[620px] w-full max-w-full 2xl:h-[700px]">
+          <div className="col-span-8 h-[calc(100dvh-14rem)] min-h-[560px] w-full max-w-full">
             <PdfViewer
               invoiceData={invoiceDataState}
               errorWhileGeneratingPdfIsShown={errorWhileGeneratingPdfIsShown}
